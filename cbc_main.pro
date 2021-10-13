@@ -34,14 +34,14 @@
 ;  
 ; OUTPUTS  
 ;   VD: velocity data structure
-;   
+;    
 ; Written by Debra Fischer, Yale, 4 July 2019
 ;   
 ; OUTSTANDING: 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 pro cbc_main, obj_nm, obsnm, templ_nm, morph_spec=morph_spec, demo=demo, $
-              vdtag=vdtag, verbose=verbose, ddir=ddir, excalibur=excalibur
+              vdtag=vdtag, verbose=verbose, ddir=ddir, excalibur=excalibur, root_dir=root_dir
 
 ; fischer 29 Jun 2019 
 
@@ -55,12 +55,12 @@ pro cbc_main, obj_nm, obsnm, templ_nm, morph_spec=morph_spec, demo=demo, $
 ;  verbose=1 
 
 ; CBCENV STRUCTURE SETS UP PATHS ETC
-  cbcenv = cbc_init(obsnm, templ_nm, osamp=osamp, obj_nm=obj_nm, ddir=ddir, excalibur=excalibur) 
+  cbcenv = cbc_init(obsnm, templ_nm, obj_nm=obj_nm, osamp=osamp, root_dir=root_dir, excalibur=excalibur)
   nchunk = cbcenv.n_chunks
   osamp = cbcenv.osamp
 
 ; RESTORE THE OBSERVED DATA
-  vd_fname=cbcenv.obs_dir+'vd'+vdtag+'_'+cbcenv.obj_nm+'.'+obsnm+'.dat'
+  vd_fname = cbcenv.obs_dir+'vd'+vdtag+'_'+cbcenv.obj_nm+'.'+obsnm+'.dat'
   restore, vd_fname  ; vd structure 
 
 ; FIT EACH CHUNK
@@ -71,8 +71,8 @@ pro cbc_main, obj_nm, obsnm, templ_nm, morph_spec=morph_spec, demo=demo, $
         mod_chunk = cbc_marq(chunk, cbcenv, vdtag=vdtag, demo=demo, verbose=verbose)
         vd[ch] = mod_chunk      ; update the chunk with newpars 
         if keyword_set(verbose) then $
-           print, vd[ch].ord, vd[ch].pixt, vd[ch].pixob, vd[ch].vel, vd[ch].red_chi, vd[ch].rms
-     endif
+           print, 'cbc_main: '+ string(obsnm, format='(F11.4)') + ':' + string(vd[ch].ord) + string(vd[ch].pixt) + string(vd[ch].pixob) + string(vd[ch].vel) + string(vd[ch].red_chi) + string(vd[ch].rms)
+      endif
   endfor   ; ch = chunk
 
   save, vd, f=vd_fname 

@@ -30,7 +30,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 pro cbc_chunk_setup, obj_nm, obsnm, templ_nm, templ_tag=templ_tag, $
-                     vdtag=vdtag, div_telluric=div_telluric, ddir=ddir, excalibur=excalibur
+                     vdtag=vdtag, div_telluric=div_telluric, ddir=ddir, $
+                     excalibur=excalibur, root_dir=root_dir
 
 ; COLLECT OBSERVATIONS 
   osamp = 1                       ; osamp of spectra
@@ -46,7 +47,8 @@ pro cbc_chunk_setup, obj_nm, obsnm, templ_nm, templ_tag=templ_tag, $
   obnm = obj_nm+'_'+obsnm          ; obsname to read
   if ~keyword_set(templ_nm) then stop
 ; get cbcenv
-  cbcenv = cbc_init(obsnm, templ_nm, obj_nm=obj_nm, osamp=osamp, ddir=ddir, excalibur=excalibur)  
+  ;cbcenv = cbc_init(obsnm, templ_nm, obj_nm=obj_nm, osamp=osamp, root_dir=root_dir, excalibur=excalibur)
+  cbcenv = cbc_init(obsnm, templ_nm, obj_nm=obj_nm, osamp=osamp, root_dir=root_dir, excalibur=excalibur)  
   c_light = cbcenv.c_light        ; speed of light
   templ_pad = cbcenv.templ_pad    ; pixels for padding template
   npix_chunk = cbcenv.n_pix       ; 160  pixels on each vd chunk   

@@ -1,4 +1,5 @@
-pro cbc_vank, obj_nm, tag, mincts=mincts, ddir=ddir, pre=pre, skip_ord=skip_ord
+pro cbc_vank, obj_nm, tag, mincts=mincts, ddir=ddir, pre=pre, $
+             skip_ord=skip_ord, root_dir=root_dir
 
 ; Fischer 6 July 2019 
 ; combine "obs" velocity data structures after chunk CBC 
@@ -21,20 +22,21 @@ pro cbc_vank, obj_nm, tag, mincts=mincts, ddir=ddir, pre=pre, skip_ord=skip_ord
 ;   velocity structure: vst10700_tag.dat in /research/cbc/vel/
 ; 
 
-if ~keyword_set(ddir) then ddir='excalibur'
-
+if strlowcase(obj_nm) eq 'sun' then path_append = '_solar' else path_append = ''
 if keyword_set(skip_ord) then skip_ord = [57, 66] ; badly contaminated with tellurics 
 
+obs_dir = root_dir + 'fitspec/'
+vels_dir = root_dir + 'vels/cbc_idl/'
+templates_dir = vels_dir + 'templates/'
+
 ; GATHER THE INPUT VDS
-  file_dir = '/Volumes/G/expres/extracted/'+ddir+'/'+obj_nm+'/'  ; '/Users/debrafischer/research/cbc/files/' 
-  if strlowcase(obj_nm) eq 'sun' then file_dir = ddir 
-  froot = 'vd'+tag+'_'+obj_nm
-  vdfiles = file_search(file_dir+froot+'*.dat', count=nobs)  ; CBC output of indiv obs
+full_path= obs_dir + '20'+ strmid(obsnm[0], 0, 2)+'/'+strmid(obsnm[0],0,6) + path_append
+vdfiles = file_search(obs_dir + '2*/2*'+_path_append + '/'+obj_nm+'*.dat', count=nobs)
+
 ;print, vdfiles
 ;stop
 ; SPECIFY THE OUTPUT VST
-  vel_dir = '/Users/debrafischer/research/cbc/vel/' 
-  vstnm = vel_dir + 'vst'+strlowcase(obj_nm)+'_'+tag+'.dat'           ; output velocity structure 
+vstnm = vels_dir + 'vst'+strlowcase(obj_nm)+'_'+tag+'.dat'           ; output velocity structure 
 
 ; BASIC PARAMETERS 
    c_light = 2.99792458d8

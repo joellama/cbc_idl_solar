@@ -46,17 +46,13 @@ FUNCTION CBC_INIT, obsnm, templ_nm, obj_nm = obj_nm, $
                    npix=npix,n_chunks = n_chunks,    $
                    st_pix = st_pix, st_ord = st_ord, $
                    n_ord = n_ord, nch_ord = nch_ord, excalibur=excalibur, $
-                   osamp = osamp, ddir=ddir  ;, $
-;                   pfilt = pfilt 
+                   osamp = osamp, ddir=ddir, $
+                   pfilt = pfilt, root_dir=root_dir
 
-  root_path='/Users/debrafischer/research/cbc/'                     ; the code lives here
-  if obj_nm eq 'sun' then begin
-     obs_dir = '/Users/debrafischer/research/cbc/data/'             ; observations live here
-     templ_dir = '/Users/debrafischer/research/cbc/template/'       ; template files here 
-  endif else begin
-     obs_dir = '/Volumes/G/expres/extracted/'+ddir+'/'+obj_nm+'/'
-     templ_dir = '/Volumes/G/expres/extracted/'+ddir+'/'+obj_nm+'/'
-  endelse
+  if not keyword_set(root_dir) then root_dir = './'
+  root_path=root_dir                   ; the code lives here
+  obs_dir = root_path + 'fitspec/20' + strmid(obsnm, 0, 2) + '/' + strmid(obsnm, 0, 6) + '_solar/'
+  templ_dir = root_path + 'vels/cbc_idl/templates/'
   out_dir = obs_dir
 
   

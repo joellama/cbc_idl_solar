@@ -35,7 +35,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 pro cbc_star_templ, obj_nm, obsnm, tag=tag, osamp=osamp, demo=demo, ddir=ddir, $
-                    excalibur=excalibur, coadd_templ_nm=coadd_templ_nm, coadd_obnm=coadd_obnm
+                    excalibur=excalibur, coadd_templ_nm=coadd_templ_nm, $
+                    coadd_obnm=coadd_obnm, root_dir=root_dir
 
 osamp = 1
 
@@ -53,7 +54,7 @@ osamp = 1
   endif
 
   templ_nm = obj_nm+'_templ_'+tag+'.dat' 
-  cbcenv = cbc_init(obsnm, templ_nm, obj_nm=obj_nm, osamp=osamp, ddir=ddir, excalibur=excalibur)
+  cbcenv = cbc_init(obsnm, templ_nm, obj_nm=obj_nm, osamp=osamp, root_dir=root_dir, excalibur=excalibur)
   c_light = cbcenv.c_light
   date = strmid(obsnm, 0, 6)       ; e.g. 190531
   edge_pad = cbcenv.edge_pad       ; toss 100 pixels from each side of order  
@@ -69,7 +70,7 @@ osamp = 1
   templ_pad = cbcenv.templ_pad     ; 40*osamp padding on each side of chunk
 
   tpix_chunk = npix_chunk + (2.*templ_pad) 
-
+ 
 ; TEMPL IS IDL STRUCTURE FOR EACH CHUNK 
 ; SAME STRUCTURE IF MORPHED
   if ~keyword_set(coadd_obnm) then coadd_obnm=' '
@@ -101,10 +102,10 @@ osamp = 1
   templ = replicate(templ, nchunks)
 
 ;; READ TEMPLATE OBSERVATION AND FILL CHUNKS
-  fname = cbcenv.obs_dir+obj_nm+'_'+obsnm+'.fits'       ; file name of observed spectrum
+  fname = cbcenv.obs_dir+obj_nm+'_'+obsnm + '.fits'       ; file name of observed spectrum
   spec = mrdfits(fname, cbcenv.file_ext)                ; observed spectrum
   if keyword_set(coadd_templ_nm) then $
-     restore,templ_dir+coadd_templ_nm                   ; star[pix, ord]
+     restore, coadd_templ_nm                   ; star[pix, ord]
 
 ; TEL_FLUX: MOLECFIT TELLURIC SPECTRUM (SC)
   for i = 0, nord-1 do begin

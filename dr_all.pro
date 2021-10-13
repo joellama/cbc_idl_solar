@@ -1,6 +1,6 @@
 pro dr_all, obj_nm=obj_nm, tag_in=tag_in, ddir=ddir, start=start, $
             thresh=thresh, ngau=ngau, night=night, all=all, demo=demo, div_telluric=div_telluric, $
-            excalibur=excalibur, mincts=mincts
+            excalibur=excalibur, mincts=mincts, root_dir=root_dir
 
 ; TAG_IN 'amz' for exalibur with poly-fitting
 ; DDIR directory name for FITS and VD files default 'excalibur'
@@ -15,9 +15,8 @@ pro dr_all, obj_nm=obj_nm, tag_in=tag_in, ddir=ddir, start=start, $
 
 ; dr_all, tag_in='amz', night='210219', /excalibur, dir='v3'
 ; dr_all, tag_in='amz', obj_nm='10700', /excalibur, dir='v3'
-
+stop
 if ~keyword_set(tag_in) then tag_in='amz'
-if ~keyword_set(ddir) then ddir='/Volumes/G/expres/extracted/v3/'
 if ~keyword_set(thresh) then thresh=0.01 
 if ~keyword_set(ngau) then ngau=130
 if keyword_set(demo) then demo=1 else demo=0 

@@ -1,8 +1,7 @@
-function ck_snr, dir=dir, obnm=obnm
+function ck_snr, dir=dir, obnm=obnm, file=file
 
 ;snr = ck_snr(dir=dir, obnm=obnm) 
-
-ff = file_search(dir+'*'+obnm+'*', count=count) 
+if ~keyword_set(file) then ff = file_search(dir+'*'+obnm+'*', count=count) else ff = file_search(file, count=count)
 
 if count eq 0 then stop, 'file not found' 
 

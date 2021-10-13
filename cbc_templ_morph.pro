@@ -51,14 +51,13 @@ pro cbc_templ_morph, obj_nm, obsnm, tag_in=tag_in, tag_out=tag_out, ddir=ddir, $
                      coadd=coadd, osamp=osamp, ngau=ngau, demo=demo, $
                      thresh=thresh, div_telluric=div_telluric, templ_rv=templ_rv, $
                      excalibur=excalibur, fix_rotbro=fix_rotbro, $
-                     init_rotbro=init_rotbro, fix_rv=fix_rv, hdcopy=hdcopy
+                     init_rotbro=init_rotbro, fix_rv=fix_rv, hdcopy=hdcopy, root_dir=root_dir
 
   if ~keyword_set(osamp) then osamp=1
-
   strngau = strcompress(string(ngau),/remove_all) 
   templ_nm_in = obj_nm+'_templ_'+tag_in+'.dat' 
   templ_nm_out = obj_nm+'_templ_'+tag_out+'.dat' 
-  cbcenv = cbc_init(obsnm, templ_nm_in, obj_nm=obj_nm, ddir=ddir, excalibur=excalibur)
+  cbcenv = cbc_init(obsnm, templ_nm_in, obj_nm=obj_nm, osamp=osamp, root_dir=root_dir, excalibur=excalibur)
   apod = cbcenv.apod               ; ignore these edge pixels when morphing templ
   c_light = cbcenv.c_light         ; speed of you-know-who
   templ_pad = cbcenv.templ_pad     ; 150*osamp padding on each side of chunk
@@ -174,7 +173,7 @@ pro cbc_templ_morph, obj_nm, obsnm, tag_in=tag_in, tag_out=tag_out, ddir=ddir, $
   parinfo[0].limited=[1,1]
   parinfo[0].limits=[parinfo[0].value-3000., parinfo[0].value+3000.]
 
-
+ 
 ; REFINED GRAB OF NSO SPECTRUM AND 
 ; MORPH the NSO WITH L-M LEAST SQUARES FIT
   for ichnk = 0, nchunks-1 do begin

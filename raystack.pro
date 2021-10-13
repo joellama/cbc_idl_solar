@@ -32,7 +32,7 @@ pro  raystack,strr,filter,ordr,snr_arr=snr_arr, auto=auto,mdtck=mdtck, px0=px0, 
 	   divdif(dum)=median(divdif)
          endfor ;m
          ind=where(fltr gt 0)
-	 cof = pl_fit(ind,divdif[ind],plord)
+	 cof = poly_fit(ind,divdif[ind],plord)
          if n_elements(cof) eq 1 then begin   ; rare BOMB condition, 28Jul99 PB
 print,'Order '+strtrim(ordr[n],2)+': Using simply ratio to compare spectra'
             nflt[*,q]=fltarr(col+1)*0.+median(divdif[ind])

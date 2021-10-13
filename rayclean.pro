@@ -1,6 +1,7 @@
 pro  rayclean,obsnm,obstack,star,nocoadd=nocoadd,diff=diff,auto=auto, $
               date=date, averg=averg, starnm=starnm, excalibur=excalibur, $
-              epoch=epoch, outfname=outfname, ddir=ddir, solar=solar
+              epoch=epoch, outfname=outfname, ddir=ddir, solar=solar, $ 
+              data_dir=data_dir
 
 ;obsnm [input]  string array    observation names used to be "ray cleaned
 ;                               and coadded to form template star
@@ -19,9 +20,12 @@ ordrstnd = 55
 px0=350 
 px1 = px0+6800-1  ; epochs 3 - 5
 
-
-path='/Volumes/G/expres/extracted/'+ddir+'/'+starnm+'/'
-tpath=path
+if keyword_set(data_dir) then begin
+   path = data_dir +'20'+ strmid(obsnm[0], 0, 2)+'/'+strmid(obsnm[0],0,6) + '_solar/'
+endif else begin
+   path='/Volumes/solar_extracted/fitspec/' + '20'+ strmid(obsnm[0], 0, 2)+'/'+strmid(obsnm[0],0,6) + '_solar/'
+endelse
+ 
 
 if keyword_set(excalibur) then begin 
    px0 = 630
@@ -29,9 +33,10 @@ if keyword_set(excalibur) then begin
 endif
 
 nobs=n_elements(obsnm)
-fnm = path+starnm+'_'+obsnm[0]+'.fits'
+; stop
+fnm = path+starnm+'_'+ obsnm[0] + '.fits'
 
-ob=mrdfits(path+starnm+'_'+obsnm[0]+'.fits',1)
+ob=mrdfits(path+starnm+'_'+obsnm[0] + '.fits',1)
 sp=ob.spectrum/ob.continuum  ; normalized spectrum
 w = ob.bary_wavelength
 ;w = ob.wavelength
@@ -49,7 +54,7 @@ if nxx gt 0 then stop, 'reject and start over? '
 snr = ck_snr(dir=path, obnm=obsnm[0])
 PRINT,'median counts at order '+strtrim(ordrstnd,2)+' = ',snr^2
 obstack = fltarr(n_elements(sp[*,0]),n_elements(sp[0,*]),nobs)
-obstack[*,*,0] = sp
+obstack[*, *, 0] = sp
 
 for n=1,nobs-1 do begin
    ob=mrdfits(path+starnm+'_'+obsnm[n]+'.fits',1)
@@ -100,7 +105,7 @@ if not keyword_set(nocoadd) and nobs eq 2 then begin
    endfor ; i (pix)
 endif
 
-save, star, f=tpath+outfname 
+save, star, f=outfname 
 
 ;stop
 end
